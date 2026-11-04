@@ -713,7 +713,7 @@
     'bc.p_mrp': 'MRP (incl. of all taxes)', 'bc.p_price': 'Price only', 'bc.p_none': 'No price',
     'bc.c_page': 'Paper', 'bc.c_roll': 'Label roll (one label per page)', 'bc.c_w': 'Label width (mm)', 'bc.c_h': 'Label height (mm)', 'bc.c_cols': 'Labels across', 'bc.c_rows': 'Labels down', 'bc.c_top': 'Top margin (mm)', 'bc.c_left': 'Left margin (mm)', 'bc.c_gx': 'Gap across (mm)', 'bc.c_gy': 'Gap down (mm)',
     'bc.search': 'Search items or codes', 'bc.item': 'Item', 'bc.code': 'Code', 'bc.price': 'Price (₹)', 'bc.copies': 'Labels', 'bc.nocode': 'No code',
-    'bc.count': '{n} labels.', 'bc.fallback': '{n} codes do not fit this barcode type, so they print as Code 128.', 'bc.pickfirst': 'Tick items or add a label by hand first.',
+    'bc.count': 'Labels: {n}', 'bc.fallback': '{n} codes do not fit this barcode type, so they print as Code 128.', 'bc.pickfirst': 'Tick items or add a label by hand first.',
     'bc.printh': 'Print at 100% (actual size), not "fit to page", with margins set to none, on the same sheet size. Try one sheet on plain paper first and hold it over a label sheet.', 'bc.rollh': 'In the print box choose your label printer and the same label size. Each label prints as its own page.',
     'bc.preview': 'Label preview', 'bc.bad': 'Cannot draw this code', 'bc.libfail': 'The barcode drawing could not load. Check the internet and try again.',
     'bc.codes': 'Item codes', 'bc.codesh': 'The code is what the barcode holds. Use the number already printed on the maker\'s pack (EAN-13), or your own code. Each item needs a different code.',
