@@ -207,3 +207,28 @@ body *{visibility:hidden}
 .pl-tb select{max-width:210px}
 .stsheet tr.s td:first-child{padding-left:16px}
 .stsheet .pb{height:8mm;border-top:1px dashed #bbb;margin-top:6mm}
+/* stock ledger (stock.): summary by group, ledgers, movement report */
+.sl-sum .g-row th,.sl-sum .g-row td{background:var(--surface2);font-weight:600}
+.sl-sum .g-sub th,.sl-sum .g-sub td{background:color-mix(in srgb,var(--surface2) 50%,transparent)}
+.sl-sum .g-sub th{padding-inline-start:22px}
+.sl-sum tr.in-sub th{padding-inline-start:34px}
+.g-tog{appearance:none;background:none;border:0;color:inherit;font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0;text-align:start}
+.g-tog:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.g-ar{flex:none;width:0;height:0;border-inline-start:7px solid currentColor;border-block:5px solid transparent;transition:transform .15s}
+.g-tog[aria-expanded=true] .g-ar{transform:rotate(90deg)}
+[dir=rtl] .g-tog[aria-expanded=true] .g-ar{transform:rotate(-90deg)}
+.g-all{margin:6px 0}
+.sl-ctl .f{min-width:0;max-width:100%}
+.sl-ctl select{max-width:100%}
+.sl-h{font-size:1rem;margin:18px 0 6px}
+.sl-warn{margin:8px 0;font-size:.9rem}
+.sl-led tr.neg td{background:color-mix(in srgb,var(--bad) 8%,transparent)}
+.sl-led tr.neg td.cl,.sl-gm td.cl{color:var(--bad)}
+.sl-led tr.op td{color:var(--soft)}
+.sl-mv .pill{white-space:nowrap}
+.stsheet td.ind{padding-left:16px}
+.stsheet .tbl tr.b td{background:#f4f6f9}
+.stsheet .sl-tot{width:auto;margin-top:4mm}
+.stsheet .pill{background:none;padding:0}
+.stsheet .sl-led tr.op td{color:#444}
+@media (prefers-reduced-motion:reduce){.g-ar{transition:none}}

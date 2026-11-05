@@ -12,6 +12,7 @@
   function load() {
     return Promise.all(['biz', 'party', 'item', 'doc'].map(function (s) { return NSStore.list(s); }).concat([NSStore.meta('settings')])).then(function (r) {
       C = { biz: r[0], party: r[1], item: r[2], doc: r[3] }; CFG = r[4] || {};
+      if (window.NSStock && NSStock.valuation) NSStock.valuation(CFG.stockValue);   /* FIFO or weighted average, My data › Settings */
       var want; try { want = localStorage.getItem('ns-app-biz'); } catch (e) {}
       BIZ = C.biz.filter(function (b) { return b.id === want; })[0] || C.biz.filter(function (b) { return b.id === CFG.defBiz; })[0] || C.biz[0] || null;
       if (!BIZ) {   /* no business master yet: the seller of the newest document */
