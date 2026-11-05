@@ -189,3 +189,21 @@ body *{visibility:hidden}
 }
 @media print{html.bc-printing body>*:not(#bc-out){display:none!important}html.bc-printing body{background:#fff}}
 .bc-pr small{display:block;font-size:1.9mm;font-weight:400}
+/* bank-reco. */
+.tile.ok b{color:var(--ok)}
+.br-brs th{font-weight:400}.br-brs tr.ok td,.br-brs tr.ok th{color:var(--ok)}.br-brs tr.bad td,.br-brs tr.bad th{color:var(--bad)}
+.br-do{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.br-do select{max-width:16rem;font-size:.85rem}
+.br-map{grid-template-columns:repeat(auto-fill,minmax(9rem,1fr))}
+.br-cols,.br-pairs{margin:12px 0}.br-cols summary,.br-pairs summary{cursor:pointer;font-weight:600}
+.br-steps{margin:8px 0 0 1.2em}.sb-note.bad{color:var(--bad)}
+.stsheet h4{margin:5mm 0 2mm;font-size:11pt}.stsheet tr.b td{font-weight:700}
+/* profit-loss.: statements and trial balance */
+.pl-st th{font-weight:400}.pl-st th.sub{padding-left:1.6em;color:var(--soft)}
+.pl-st tr.b th,.pl-st tr.b td{font-weight:600}
+.pl-st tr.tot th,.pl-st tr.tot td{font-weight:700;border-top:2px solid var(--line)}
+.pl-st tr.big th,.pl-st tr.big td{font-size:1.05em}
+.pl-st tr.sec th{background:var(--surface2);font-weight:700;text-transform:uppercase;font-size:.78rem;letter-spacing:.04em}
+.pl-st tr.bad th,.pl-st tr.bad td,.pl-tb tr.bad th{color:var(--bad)}
+.pl-tb select{max-width:210px}
+.stsheet tr.s td:first-child{padding-left:16px}
+.stsheet .pb{height:8mm;border-top:1px dashed #bbb;margin-top:6mm}
