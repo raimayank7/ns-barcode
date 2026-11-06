@@ -91,7 +91,7 @@
 .seg [aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .tbl-wrap{overflow-x:auto;margin:10px 0;-webkit-overflow-scrolling:touch}
 .tbl{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--surface)}
-.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:start;vertical-align:top}
 .tbl thead th{background:var(--surface2);font-size:.84rem}
 .tbl .n{text-align:right;font-family:var(--mono);white-space:nowrap}
 .tbl td.acts{display:table-cell;white-space:nowrap}
@@ -141,7 +141,7 @@ body *{visibility:hidden}
 .sb-period{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:end;margin:10px 0}
 .sb-period .f{display:flex;flex-direction:column;gap:3px;font-size:.86rem;font-weight:600}
 .sb-period input,.sb-period select{width:auto}
-.tbl td.l,.tbl th.l{text-align:left}
+.tbl td.l,.tbl th.l{text-align:start}
 .tbl tr.low td,.tbl tr.low th{background:color-mix(in srgb,var(--amber) 14%,transparent)}
 .tbl tr.neg td.n.cl{color:var(--bad)}
 .pill.bad{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}

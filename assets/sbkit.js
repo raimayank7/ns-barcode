@@ -41,7 +41,7 @@
   function toolUrl(site) { var x = TOOLS.filter(function (x) { return x[0] === site; })[0]; if (!x) return 'https://' + site + '.niveshsahayak.in/'; return LOCAL ? 'http://localhost:' + x[4] + '/' : 'https://' + x[1] + '/'; }
   function myUrl(h) { return (LOCAL ? 'http://localhost:8862/' : 'https://my.niveshsahayak.in/') + (h || ''); }
   function noBiz() {
-    return '<div class="card"><h2>' + esc(t('sb.nobiz')) + '</h2><p>' + esc(t('sb.nobizp')) + '</p><p><a class="btn primary" href="' + myUrl('#biz') + '">' + esc(t('sb.addbiz')) + '</a></p></div>';
+    return '<div class="card"><h2>' + esc(t('sb.nobiz')) + '</h2><p>' + esc(t('sb.nobizp')) + '</p><p><a class="btn primary" href="' + myUrl('#biz/new') + '">' + esc(t('sb.addbiz')) + '</a></p></div>';
   }
 
   /* the name of any saved record, in the screen language */
