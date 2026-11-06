@@ -12,13 +12,17 @@
   function load() {
     return Promise.all(['biz', 'party', 'item', 'doc'].map(function (s) { return NSStore.list(s); }).concat([NSStore.meta('settings')])).then(function (r) {
       C = { biz: r[0], party: r[1], item: r[2], doc: r[3] }; CFG = r[4] || {};
-      if (window.NSStock && NSStock.valuation) NSStock.valuation(CFG.stockValue);   /* FIFO or weighted average, My data › Settings */
-      var want; try { want = localStorage.getItem('ns-app-biz'); } catch (e) {}
+      NS.bizCache = C.biz;
+      if (NS.cfgSplit(CFG, C.biz)) NSStore.meta('settings', CFG).catch(function () {});   /* settings per business: one-time copy */
+      var RAW = CFG;
+      var want = NS.curBiz();
       BIZ = C.biz.filter(function (b) { return b.id === want; })[0] || C.biz.filter(function (b) { return b.id === CFG.defBiz; })[0] || C.biz[0] || null;
       if (!BIZ) {   /* no business master yet: the seller of the newest document */
         var d = C.doc.slice().sort(function (a, b) { return (b.updated || 0) - (a.updated || 0); }).filter(function (d) { return d.seller && d.seller.name; })[0];
         if (d) BIZ = Object.assign({ id: '', name: d.seller.name }, d.seller);
       }
+      CFG = NS.cfgFor(RAW, BIZ, C.biz);   /* the settings of the business this page works in */
+      if (window.NSStock && NSStock.valuation) NSStock.valuation(CFG.stockValue);   /* FIFO or weighted average, My data › Settings */
       return C;
     });
   }
@@ -32,7 +36,7 @@
   }
   function wireBiz(root, again) {
     var s = $('[data-sb-biz]', root);
-    if (s) s.addEventListener('change', function () { try { localStorage.setItem('ns-app-biz', s.value); } catch (e) {} again(); });
+    if (s) s.addEventListener('change', function () { NS.setCurBiz(s.value); again(); });
   }
   function toolUrl(site) { var x = TOOLS.filter(function (x) { return x[0] === site; })[0]; if (!x) return 'https://' + site + '.niveshsahayak.in/'; return LOCAL ? 'http://localhost:' + x[4] + '/' : 'https://' + x[1] + '/'; }
   function myUrl(h) { return (LOCAL ? 'http://localhost:8862/' : 'https://my.niveshsahayak.in/') + (h || ''); }
