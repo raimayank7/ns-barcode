@@ -1,5 +1,5 @@
-const CACHE = 'ns-barcode-11beee77a2';
-const SHELL = ["/", "/assets/b-sb.cfe4b86daf.css", "/assets/b-core.3a296b6465.js", "/assets/b-barcode.13b5e81e1d.js", "/assets/books.js?v=0dd2bb2418", "/assets/xlsx.js?v=9c9abd01b6", "/assets/tally.js?v=8932db5030", "/assets/acct.js?v=d16cff575f"];
+const CACHE = 'ns-barcode-ff90091e24';
+const SHELL = ["/", "/assets/b-sb.c4423413a8.css", "/assets/b-core.6bbcb02aa0.js", "/assets/b-barcode.c32bd9c396.js", "/assets/books.js?v=0dd2bb2418", "/assets/xlsx.js?v=9c9abd01b6", "/assets/tally.js?v=8932db5030", "/assets/acct.js?v=d16cff575f"];
 const WARM = [], LGROUPS = [];
 const slow = () => { const c = self.navigator && navigator.connection; return !!c && (c.saveData || /2g/.test(c.effectiveType || '')); };
 const keep = (c, list) => Promise.allSettled(list.map(u => c.match(u).then(m => m || c.add(u))));
