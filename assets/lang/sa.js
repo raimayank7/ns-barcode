@@ -9955,3 +9955,29 @@ NS.addLang("sa", {
 NS.addLang("sa", {
   "nav.desktop": "Windows program"
 });
+
+/* Business-type tools filter (2026-11-17) */
+NS.addLang("sa", {
+  "fr.k_dairy": "Dairy or milk business",
+  "fr.kh_dairy": "Milk collection, deliveries, farmer and customer passbooks",
+  "fr.k_hotel": "Hotel or guest house",
+  "fr.kh_hotel": "Room bookings, bills, food and staff",
+  "fr.k_rent": "Landlord or rent",
+  "fr.kh_rent": "Tenants, rent bills and agreement dates",
+  "fr.k_garage": "Garage or workshop",
+  "fr.kh_garage": "Job cards, service history, spares and reminders",
+  "fr.k_jewel": "Jeweller",
+  "fr.kh_jewel": "Weight, purity, making charges and old gold",
+  "fr.k_garment": "Garment or cloth shop",
+  "fr.kh_garment": "Size and colour stock, counter bills",
+  "fr.k_petrol": "Petrol pump",
+  "fr.kh_petrol": "Shift reports, meter readings, dip stock and cash",
+  "fr.k_mandi": "Mandi or commission agent",
+  "fr.kh_mandi": "Weighment, settlement slips and farmer payments",
+  "fr.k_online": "Online seller",
+  "fr.kh_online": "Marketplace orders, returns, fees and payouts",
+  "fr.g_learn": "Help and extras",
+  "fr.f_lrn": "Calculators, forms to file and lessons",
+  "fr.offnote": "turned off for your business: opens as usual",
+  "fr.hidnote": "Tools your type of business does not need are hidden here. Turn any of them on in"
+});
