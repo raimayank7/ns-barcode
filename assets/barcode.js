@@ -80,7 +80,7 @@
     var list = items().filter(function (m) { return !q || String(m.desc + ' ' + (m.code || '')).toLowerCase().indexOf(q.toLowerCase()) >= 0; });
     var noCode = items().filter(function (m) { return !m.code; }).length, lay = layout();
     var rows = list.map(function (m) {
-      var s = sel[m.id] || { n: 0, price: m.mrp != null && m.mrp !== '' ? m.mrp : m.rate };
+      var s = sel[m.id] || { n: 0, price: labelPrice(m) };
       return '<tr><td class="l"><label class="chk"><input type="checkbox" data-pick="' + esc(m.id) + '"' + (s.n > 0 ? ' checked' : '') + '> ' + esc(m.desc) + '</label></td>' +
         '<td class="mono">' + (m.code ? esc(m.code) : '<span class="pill warn">' + esc(t('bc.nocode')) + '</span>') + '</td>' +
         '<td><input class="bc-n" inputmode="decimal" data-price="' + esc(m.id) + '" value="' + esc(s.price == null ? '' : s.price) + '" aria-label="' + esc(t('bc.price')) + '"></td>' +
@@ -113,6 +113,8 @@
       f('w', 'bc.c_w') + f('h', 'bc.c_h') + (c.page === 'a4' ? f('cols', 'bc.c_cols') + f('rows', 'bc.c_rows') + f('top', 'bc.c_top') + f('left', 'bc.c_left') + f('gx', 'bc.c_gx') + f('gy', 'bc.c_gy') : '') + '</div>';
   }
 
+  /* F5-11: the price on a label is what the customer pays: the saved MRP, else the sale rate WITH its GST (never the rate before GST under "incl. of all taxes") */
+  function labelPrice(m) { if (!m) return ''; if (m.mrp != null && m.mrp !== '') return m.mrp; var r = num(m.rate); if (!r) return m.rate; return Math.round(r * (1 + num(m.gst) / 100) * 100) / 100; }
   /* one label's inner HTML; barcodes are drawn into the <svg data-bc> afterwards */
   function labelHtml(x, lay) {
     var b = NSB.biz() || {}, f = fit(x.code, SET.type), h = lay.h, small = h < 24;
@@ -279,7 +281,7 @@
     $$('[data-cust]', pane).forEach(function (e) { e.addEventListener('change', function () { var k = e.getAttribute('data-cust'); SET.custom[k] = k === 'page' ? e.value : num(e.value); keep(); show(); }); });
     $$('[data-pick]', pane).forEach(function (c) { c.addEventListener('change', function () {
       var id = c.getAttribute('data-pick'), m = items().filter(function (x) { return x.id === id; })[0];
-      var s = sel[id] || { n: 0, price: m && (m.mrp != null && m.mrp !== '' ? m.mrp : m.rate) };
+      var s = sel[id] || { n: 0, price: m && (labelPrice(m)) };
       s.n = c.checked ? Math.max(1, s.n) : 0; sel[id] = s; show();
     }); });
     $$('[data-copies]', pane).forEach(function (c) { c.addEventListener('change', function () { var id = c.getAttribute('data-copies'), s = sel[id] || {}; s.n = Math.max(0, Math.min(999, parseInt(c.value, 10) || 0)); if (s.price == null) { var m = items().filter(function (x) { return x.id === id; })[0]; s.price = m && m.rate; } sel[id] = s; show(); }); });
@@ -324,7 +326,7 @@
     });
     var tl = $('[data-tolabels]', pane); if (tl) tl.addEventListener('click', function () {
       var by = byCode();
-      scans.forEach(function (s) { var m = by[s.code]; if (m) sel[m.id] = { n: s.n, price: m.mrp != null && m.mrp !== '' ? m.mrp : m.rate }; else extra.push({ code: s.code, name: '', price: '', n: s.n }); });
+      scans.forEach(function (s) { var m = by[s.code]; if (m) sel[m.id] = { n: s.n, price: labelPrice(m) }; else extra.push({ code: s.code, name: '', price: '', n: s.n }); });
       location.hash = '';
     });
   }
