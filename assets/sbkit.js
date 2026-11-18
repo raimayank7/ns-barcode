@@ -1,5 +1,5 @@
 /* NSB: small shared kit of the stock and books sites (stock., barcode., bank-reco., profit-loss.).
-   Loads the data home once per screen, picks the business (same choice as the Nivesh Sahayak App), names saved
+   Loads the data home once per screen, picks the business (same choice as NSBiz), names saved
    documents, draws the period bar, opens a form dialog, prints or shares one sheet. Screen words: NS.t('sb.*'). */
 (function () {
   'use strict';
