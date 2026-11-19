@@ -58,8 +58,8 @@
     return NSB.load().then(function () {
       var pane = $('[data-pane]');
       NSB.modeLine();
-      pane.innerHTML = ({ home: printHtml, scan: scanHtml, codes: codesHtml })[cur]();
-      wire(pane);
+      pane.innerHTML = (cur === 'home' ? NSB.bizBar() : '') + ({ home: printHtml, scan: scanHtml, codes: codesHtml })[cur]();
+      NSB.wireBiz(pane, show); wire(pane);   /* F5-11 */
       if (cur === 'home') drawPreview();
       if (focus) NSB.focusH2(pane);
     });
@@ -195,7 +195,7 @@
   }
   function giveCodes() {
     var need = items().filter(function (m) { return !m.code; }), codes = nextCodes(need.length);
-    if (!need.length || !confirm(t('bc.givec', { n: need.length }))) return;
+    if (!need.length || !NS.okSync(t('bc.givec', { n: need.length }))) return;
     Promise.all(need.map(function (m, i) { m.code = codes[i]; return NSStore.put('item', m); })).then(function () { NS.toast(t('sb.saved')); show(); });
   }
 
@@ -319,7 +319,7 @@
     $$('[data-minus]', pane).forEach(function (b) { b.addEventListener('click', function () { var s = scans[+b.getAttribute('data-minus')]; s.n--; if (s.n <= 0) scans.splice(scans.indexOf(s), 1); gotRefresh(); }); });
     $$('[data-rms]', pane).forEach(function (b) { b.addEventListener('click', function () { scans.splice(+b.getAttribute('data-rms'), 1); gotRefresh(); }); });
     $$('[data-newitem]', pane).forEach(function (b) { b.addEventListener('click', function () { newItemForm(+b.getAttribute('data-newitem')); }); });
-    var cl = $('[data-clear]', pane); if (cl) cl.addEventListener('click', function () { if (confirm(t('bc.clearc'))) { scans = []; gotRefresh(); } });
+    var cl = $('[data-clear]', pane); if (cl) cl.addEventListener('click', function () { if (NS.okSync(t('bc.clearc'))) { scans = []; gotRefresh(); } });
     var cv = $('[data-csv]', pane); if (cv) cv.addEventListener('click', function () {
       var by = byCode();
       NSB.csv('scanned-' + NS.today() + '.csv', [['Code', 'Item', 'Quantity']].concat(scans.map(function (s) { return [s.code, by[s.code] ? by[s.code].desc : '', s.n]; })));

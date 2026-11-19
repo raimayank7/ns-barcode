@@ -6,12 +6,12 @@
   var $ = NS.$, $$ = NS.$$, esc = NS.esc, key = function (s) { return String(s || '').trim().toLowerCase().replace(/\s+/g, ' '); };
   var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   var TOOLS = (window.NS_CFG && NS_CFG.tools) || [];
-  var C = { biz: [], party: [], item: [], doc: [] }, CFG = {}, BIZ = null;
+  var C = { biz: [], party: [], item: [], doc: [] }, CFG = {}, BIZ = null, BANKS = {};
 
   function t(k, v) { return NS.t(k, v); }
   function load() {
-    return Promise.all(['biz', 'party', 'item', 'doc'].map(function (s) { return NSStore.list(s); }).concat([NSStore.meta('settings')])).then(function (r) {
-      C = { biz: r[0], party: r[1], item: r[2], doc: r[3] }; CFG = r[4] || {};
+    return Promise.all(['biz', 'party', 'item', 'doc'].map(function (s) { return NSStore.list(s); }).concat([NSStore.meta('settings'), NSStore.meta('banks')])).then(function (r) {
+      C = { biz: r[0], party: r[1], item: r[2], doc: r[3] }; CFG = r[4] || {}; BANKS = r[5] || {};
       NS.bizCache = C.biz;
       if (NS.cfgSplit(CFG, C.biz)) NSStore.meta('settings', CFG).catch(function () {});   /* settings per business: one-time copy */
       var RAW = CFG;
@@ -23,10 +23,13 @@
       }
       CFG = NS.cfgFor(RAW, BIZ, C.biz);   /* the settings of the business this page works in */
       if (window.NSStock && NSStock.valuation) NSStock.valuation(CFG.stockValue);   /* FIFO or weighted average, My data › Settings */
+      if (window.NSBooks && NSBooks.setBanks) NSBooks.setBanks(banks());   /* several banks: their names in reports */
       return C;
     });
   }
   function bizName() { return BIZ ? BIZ.name : ''; }
+  /* the business's bank accounts (default bank first; meta 'banks', ERP masters step 3) */
+  function banks() { return window.NSBooks && NSBooks.bankList ? NSBooks.bankList(BIZ, BANKS, t('app.bankdef')) : []; }
   function mine() { var b = key(bizName()); return C.doc.filter(function (d) { return key(d.seller && d.seller.name) === b; }); }
   function sellerCopy() { var s = JSON.parse(JSON.stringify(BIZ || {})); delete s.id; delete s.created; delete s.updated; return s; }
   function bizBar() {
@@ -51,7 +54,7 @@
     if (ty === 'note') return t(d.kind === 'debit' ? 'sb.d.dn' : 'sb.d.cn');
     if (ty === 'pbill') return t(d.kind === 'return' ? 'sb.d.pret' : 'sb.d.pbill');
     if (ty === 'voucher') return t('sb.d.vch');
-    if (ty === 'stk') return t(d.kind === 'open' ? 'sb.d.open' : 'sb.d.adj');
+    if (ty === 'stk') return t(d.kind === 'open' ? 'sb.d.open' : d.kind === 'phys' ? 'sb.d.phys' : d.kind === 'rejin' ? 'sb.d.rejin' : 'sb.d.adj');   /* ERP round 1: physical stock, goods back on a challan */
     return NAMES[ty] ? t(NAMES[ty]) : ty;
   }
   /* the same in English, for printed sheets */
@@ -66,7 +69,12 @@
 
   /* period: this financial year to today by default; kept per site in this browser */
   function fyStart(iso) { return NS.fy(iso).slice(0, 4) + '-04-01'; }
+  /* the stock and profit-loss screens use the one working period of every report (core.js NS.period, ERP review R-3) */
+  function shared(site) { return (site === 'stock' || site === 'profit-loss') && NS.period; }
+  var onPer = null;
+  window.addEventListener('storage', function (e) { if (e.key === 'ns-period' && onPer) onPer(); });   /* the App changed it: a stock screen kept open follows */
   function period(site) {
+    if (shared(site)) { var q = NS.period(); return { from: q.from, to: q.to }; }
     var p = {}; try { p = JSON.parse(localStorage.getItem('ns-' + site + '-period') || '{}'); } catch (e) {}
     return { from: p.from || fyStart(NS.today()), to: p.to || NS.today() };
   }
@@ -77,7 +85,8 @@
       '<button type="button" class="btn sm" data-sb-fy>' + esc(t('sb.thisfy')) + '</button>' + (extra || '') + '</div>';
   }
   function wirePeriod(root, site, again) {
-    function set(f, to) { try { localStorage.setItem('ns-' + site + '-period', JSON.stringify({ from: f, to: to })); } catch (e) {} again(); }
+    if (shared(site)) onPer = again;
+    function set(f, to) { if (shared(site)) NS.periodSet(f, to); else try { localStorage.setItem('ns-' + site + '-period', JSON.stringify({ from: f, to: to })); } catch (e) {} again(); }
     var f = $('#sb-from', root), to = $('#sb-to', root), fy = $('[data-sb-fy]', root);
     if (f) f.addEventListener('change', function () { set(f.value, to.value); });
     if (to) to.addEventListener('change', function () { set(f.value, to.value); });
@@ -111,7 +120,7 @@
   function focusH2(pane) { var h2 = $('h2', pane); if (h2) { h2.tabIndex = -1; h2.focus({ preventScroll: true }); } }
   function navMark(cur) { $$('[data-sec]').forEach(function (b) { b.setAttribute('aria-current', b.getAttribute('data-sec') === cur ? 'page' : 'false'); }); }
 
-  window.NSB = { t: t, key: key, load: load, data: function () { return C; }, cfg: function () { return CFG; }, biz: function () { return BIZ; }, bizName: bizName, mine: mine, sellerCopy: sellerCopy,
+  window.NSB = { t: t, key: key, load: load, banks: banks, data: function () { return C; }, cfg: function () { return CFG; }, biz: function () { return BIZ; }, bizName: bizName, mine: mine, sellerCopy: sellerCopy,
     bizBar: bizBar, wireBiz: wireBiz, noBiz: noBiz, toolUrl: toolUrl, myUrl: myUrl, docName: docName, enName: enName, fyStart: fyStart, period: period, periodBar: periodBar,
     wirePeriod: wirePeriod, dialog: dialog, closeDialog: closeDialog, printSheet: printSheet, shareSheet: shareSheet, csv: csv, modeLine: modeLine, focusH2: focusH2, navMark: navMark, LOCAL: LOCAL };
 })();
