@@ -243,10 +243,11 @@
           });
         });
       }
-      return NS.loadJs(LIB.zx[0], LIB.zx[1]).then(function () {
-        var reader = new window.ZXing.BrowserMultiFormatReader();
-        cam = { video: video, reader: reader };
-        return reader.decodeFromConstraints({ video: { facingMode: 'environment' } }, video, function (res) { if (res) gotCode(res.getText()); });
+      /* no BarcodeDetector (Windows Chrome, the Windows program): the shared reader with zxing-wasm (NS.codeReader, core.js) */
+      return navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false }).then(function (stream) {
+        video.srcObject = stream; return video.play().then(function () { return NS.codeReader(); }).then(function (R) {
+          var last = '', at = 0; cam = { video: video, stream: stream, timer: setInterval(function () { R.read(video).then(function (txt) { if (txt && (txt !== last || Date.now() - at > 2500)) { last = txt; at = Date.now(); gotCode(txt); } }); }, 300) };
+        });
       });
     }).catch(function () { stopCam(); NS.toast(t('bc.camfail'), 'bad'); });
   }
